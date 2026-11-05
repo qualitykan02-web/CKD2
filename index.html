@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard โรคไตเรื้อรัง จังหวัดกาญจนบุรี</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EAF7FF;--ink:#12304A;--mut:#5B7690;--card:#fff;--teal:#00B8A9;--sky:#2DA8FF;--vio:#6C4DFF;--sun:#FFC53D;--coral:#FF5A5F;--ok:#12B76A;--line:#DCEBF5}
+@media (prefers-color-scheme:dark){:root{--bg:#0C1E2E;--ink:#E8F4FF;--mut:#9DB7CC;--card:#13293D;--line:#244159}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Sarabun,sans-serif;padding-bottom:40px}
+h1,h2,h3,.num{font-family:Prompt,Sarabun,sans-serif}
+header{background:linear-gradient(120deg,#00B8A9 0%,#2DA8FF 50%,#6C4DFF 100%);color:#fff;padding:26px 24px 70px;position:relative;overflow:hidden}
+header h1{margin:0 0 6px;font-size:clamp(22px,3.4vw,34px)}
+header p{margin:0;opacity:.95}
+.hwrap{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.kid{width:150px;flex:none;filter:drop-shadow(0 10px 14px rgba(0,0,0,.28))}
+.bub{position:absolute;border-radius:50%;background:rgba(255,255,255,.14)}
+.status{display:inline-flex;gap:8px;align-items:center;margin-top:14px;background:rgba(255,255,255,.2);padding:6px 12px;border-radius:99px;font-size:14px}
+.dot{width:10px;height:10px;border-radius:50%;background:#7CFFB2;box-shadow:0 0 0 4px rgba(124,255,178,.3)}
+.dot.err{background:var(--sun);box-shadow:0 0 0 4px rgba(255,197,61,.35)}
+.status button{border:0;background:#fff;color:#12304A;border-radius:99px;padding:3px 10px;cursor:pointer;font:inherit;font-size:13px}
+main{max-width:1180px;margin:-48px auto 0;padding:0 16px;position:relative}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:16px}
+.card{background:var(--card);border-radius:20px;padding:20px;box-shadow:0 8px 24px rgba(18,48,74,.12);border:1px solid var(--line)}
+.card h2{font-size:17px;margin:0 0 4px}
+.sub{color:var(--mut);font-size:13px;margin:0 0 12px}
+.kpi{border-top:6px solid var(--c)}
+.gauge{display:block;margin:6px auto 0;width:100%;max-width:300px}
+.big{font-size:40px;font-weight:700;text-align:center;margin-top:-52px;line-height:1.1}
+.tag{text-align:center;margin:8px 0 12px}
+.chip{display:inline-block;border-radius:99px;padding:2px 12px;font-size:13px;font-weight:600;color:#fff}
+.pass{background:var(--ok)}.fail{background:var(--coral)}.na{background:#98A9B8}
+.years{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.yr{background:color-mix(in srgb,var(--c) 12%,transparent);border-radius:12px;padding:8px 4px;text-align:center}
+.yr small{display:block;color:var(--mut);font-size:12px}
+.yr b{font-family:Prompt;font-size:16px}
+.stat{display:flex;gap:14px;align-items:center}
+.ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:26px;background:var(--c);flex:none;box-shadow:0 6px 12px color-mix(in srgb,var(--c) 45%,transparent)}
+.stat .num{font-size:26px;font-weight:700;line-height:1.1}
+.stat span{color:var(--mut);font-size:13px}
+.row{display:grid;grid-template-columns:128px 1fr 62px;align-items:center;gap:8px;margin:7px 0;font-size:13px}
+.nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trk{position:relative;height:18px;background:color-mix(in srgb,var(--mut) 16%,transparent);border-radius:9px;overflow:hidden}
+.fill{position:absolute;top:0;bottom:0;border-radius:9px;transition:all .6s}
+.tgt{position:absolute;top:-3px;bottom:-3px;width:0;border-left:2px dashed var(--ink);z-index:2}
+.v{text-align:right;font-weight:600}
+.legend{font-size:12px;color:var(--mut);margin-top:8px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:760px}
+th{background:linear-gradient(90deg,var(--teal),var(--sky));color:#fff;padding:8px;font-weight:600;position:sticky;top:0}
+td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}
+td:nth-child(2),td:nth-child(1){text-align:left}
+tr.tot td{font-weight:700;background:color-mix(in srgb,var(--sun) 25%,transparent)}
+.neg{color:var(--coral);font-weight:600}
+footer{max-width:1180px;margin:18px auto 0;padding:0 16px;color:var(--mut);font-size:12.5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="bub" style="width:220px;height:220px;right:-60px;top:-80px"></div>
+  <div class="bub" style="width:120px;height:120px;left:38%;bottom:-60px"></div>
+  <div class="hwrap">
+    <div>
+      <h1>สถานการณ์โรคไตเรื้อรัง จังหวัดกาญจนบุรี</h1>
+      <p id="asof">กำลังโหลดข้อมูล…</p>
+      <div class="status"><i class="dot" id="dot"></i><span id="stxt">เชื่อมต่อ Google Sheet…</span><button onclick="load()">รีเฟรชทันที</button></div>
+    </div>
+    <svg class="kid" viewBox="0 0 160 190" aria-hidden="true">
+      <defs>
+        <radialGradient id="kg" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="#FF9AA2"/><stop offset=".5" stop-color="#E8465B"/><stop offset="1" stop-color="#8E1B3A"/></radialGradient>
+        <linearGradient id="ur" x1="0" x2="1"><stop offset="0" stop-color="#FFD36B"/><stop offset="1" stop-color="#E59A12"/></linearGradient>
+        <radialGradient id="dr" cx="35%" cy="30%"><stop offset="0" stop-color="#E6FAFF"/><stop offset="1" stop-color="#1FA0E8"/></radialGradient>
+      </defs>
+      <path d="M72 120 C72 150 66 165 70 184" stroke="url(#ur)" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <path d="M98 20 C150 22 168 78 138 128 C118 160 70 170 52 140 C44 126 62 114 72 112 C60 100 52 84 58 62 C64 36 80 19 98 20Z" fill="url(#kg)"/>
+      <path d="M72 112 C84 106 90 96 82 84" stroke="#7A1530" stroke-width="5" fill="none" stroke-linecap="round" opacity=".55"/>
+      <ellipse cx="96" cy="44" rx="24" ry="11" fill="#fff" opacity=".38" transform="rotate(-24 96 44)"/>
+      <path d="M20 40 C20 40 11 55 20 60 C29 55 20 40 20 40Z" fill="url(#dr)"/>
+      <path d="M16 96 C16 96 9 106 16 110 C23 106 16 96 16 96Z" fill="url(#dr)"/>
+    </svg>
+  </div>
+</header>
+
+<main>
+  <div class="grid g2" id="kpis"></div>
+  <div class="grid g4" id="stats"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h2>ตัวชี้วัด 2: ร้อยละผู้ป่วย CKD ได้รับยา ACEi/ARB</h2><p class="sub">เรียงจากมากไปน้อย เส้นประ = เป้าหมาย ≥ ร้อยละ 60</p><div id="b2"></div></div>
+    <div class="card"><h2>ตัวชี้วัด 1: ร้อยละผู้ป่วย CKD stage 5 รายใหม่ที่ลดลง</h2><p class="sub">ค่าติดลบ = เพิ่มขึ้นจากปีก่อน เส้นประ = เป้าหมาย &gt; ร้อยละ 5</p><div id="b1"></div><div class="legend">แท่งแสดงช่วง −100 ถึง +60 (ค่าจริงแสดงด้านขวา)</div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h2>ตารางผลการดำเนินงานรายหน่วยบริการ</h2><p class="sub">ข้อมูลจาก Google Sheet อัปเดตอัตโนมัติ</p>
+    <div class="tw"><table id="tb"></table></div>
+  </div>
+</main>
+<footer>แหล่งข้อมูล: Google Sheet “สาขาไต” (ปีงบประมาณ 2569) · แก้ไขใน Sheet แล้วหน้านี้จะอัปเดตเองตามรอบรีเฟรช</footer>
+
+<script>
+/* ===== ตั้งค่า ===== */
+const CONFIG = {
+  SHEET_ID: '1NuCZPYA3oJi5FFGIoyO39BdlcwoGfJwFfjy4-vVsHtU',
+  GID: '0',          // gid ของแท็บ (ดูใน URL หลัง #gid=)
+  REFRESH_SEC: 45    // รอบรีเฟรช 30–60 วินาที
+};
+/* ข้อมูลสำรอง (ใช้เมื่อดึง Sheet ไม่ได้) */
+const FALLBACK = {asof:'ข้อมูล ณ วันที่ 19 ตุลาคม พ.ศ. 2569',k1:[null,null,-28.57,-24.58],k2:[46.02,42.48,41.58,42.95],
+units:[[1,'รพ.พหลพลพยุหเสนา',143,105,-36.19,'ไม่ผ่าน',1695,6541,25.91,'ไม่ผ่าน'],[2,'รพ.มะการักษ์',98,102,3.92,'ไม่ผ่าน',749,2195,34.12,'ไม่ผ่าน'],[3,'รพ.ทองผาภูมิ',7,7,0,'ไม่ผ่าน',327,614,53.26,'ไม่ผ่าน'],[4,'รพ.สมเด็จพระสังฆราชองค์ที่ 19',78,66,-18.18,'ไม่ผ่าน',462,1002,46.11,'ไม่ผ่าน'],[5,'รพ.บ่อพลอย',37,29,-27.59,'ไม่ผ่าน',351,807,43.49,'ไม่ผ่าน'],[6,'รพ.สังขละบุรี',4,1,-300,'ไม่ผ่าน',63,95,66.32,'ผ่าน'],[7,'รพ.เจ้าคุณไพบูลย์พนมทวน',54,42,-28.57,'ไม่ผ่าน',960,1136,84.51,'ผ่าน'],[8,'รพ.ด่านมะขามเตี้ย',21,22,4.55,'ไม่ผ่าน',331,525,63.05,'ผ่าน'],[9,'รพ.ท่ากระดาน',1,2,50,'ไม่ผ่าน',231,304,75.99,'ผ่าน'],[10,'รพ.ไทรโยค',36,20,-80,'ไม่ผ่าน',643,788,81.6,'ผ่าน'],[11,'รพ.เลาขวัญ',48,36,-33.33,'ไม่ผ่าน',96,574,16.72,'ไม่ผ่าน'],[12,'รพ.พยาบาลสถานพระบารมี',0,0,null,'ไม่ผ่าน',0,0,null,'ผ่าน'],[13,'รพ.สมเด็จพระปิยมหาราชรมณียเขต',0,0,null,'ไม่ผ่าน',0,0,null,'ผ่าน'],[14,'รพ.ห้วยกระเจาเฉลิมพระเกียรติ 80 พรรษา',30,23,-30.43,'ไม่ผ่าน',473,783,60.41,'ผ่าน'],[15,'รพ.ศุกร์ศิริศรีสวัสดิ์',14,12,-16.67,'ไม่ผ่าน',496,858,57.81,'ไม่ผ่าน'],[16,'รพ.หนองปรือ',22,9,-144.44,'ไม่ผ่าน',342,587,58.26,'ไม่ผ่าน']],
+tot:[593,476,-24.58,'ไม่ผ่าน',7219,16809,42.95,'ไม่ผ่าน']};
+
+/* ===== ดึงและแปลงข้อมูล ===== */
+const csvUrl = () => `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/gviz/tq?tqx=out:csv&gid=${CONFIG.GID}&_=${Date.now()}`;
+function parseCSV(t){const r=[];let row=[],c='',q=false;for(let i=0;i<t.length;i++){const ch=t[i];
+  if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}
+  else if(ch=='"')q=true;else if(ch==','){row.push(c);c=''}
+  else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&t[i+1]=='\n')i++;row.push(c);r.push(row);row=[];c=''}else c+=ch}
+  row.push(c);r.push(row);return r}
+const num = s => { const v = parseFloat(String(s).replace(/,/g,'')); return isNaN(v)?null:v };
+function toData(csv){
+  const d={asof:'',k1:[],k2:[],units:[],tot:null};
+  for(const raw of parseCSV(csv)){
+    const c=raw.map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean); if(!c.length) continue;
+    const line=c.join(' ');
+    const m=line.match(/ข้อมูล ณ วันที่ [^,]*?(?=$)/); if(m&&!d.asof&&/ปีงบประมาณ/.test(line)) d.asof=m[0];
+    const k=c[0].match(/^ตัวชี้วัด\s*:\s*(\d)\./);
+    if(k&&c.length>=5){d['k'+k[1]]=c.slice(-4).map(num);continue}
+    if(/^รวมทั้งสิ้น/.test(c[0])&&c.length>=9){const t=c.slice(1,9);d.tot=[num(t[0]),num(t[1]),num(t[2]),t[3],num(t[4]),num(t[5]),num(t[6]),t[7]];continue}
+    let no=null,rest=c;
+    if(/^\d+$/.test(c[0])) {no=+c[0];rest=c.slice(1)} else {const mm=c[0].match(/^(\d+)\s+(.+)/); if(mm){no=+mm[1];rest=[mm[2],...c.slice(1)]}}
+    if(no&&rest.length>=9){const t=rest.slice(1,9);
+      d.units.push([no,rest[0],num(t[0]),num(t[1]),num(t[2]),t[3],num(t[4]),num(t[5]),num(t[6]),t[7]])}
+  }
+  if(d.units.length<3||d.k1.length<4||d.k2.length<4) throw new Error('โครงสร้างข้อมูลไม่ตรงรูปแบบ');
+  if(!d.tot){const s=i=>d.units.reduce((a,u)=>a+(u[i]||0),0);const a1=s(2),b1=s(3),a2=s(6),b2=s(7);
+    d.tot=[a1,b1,b1?(b1-a1)/b1*100:null,'',a2,b2,b2?a2/b2*100:null,'']}
+  return d;
+}
+
+/* ===== แสดงผล ===== */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const f=(v,d=2)=>v==null?'N/A':v.toLocaleString('th-TH',{minimumFractionDigits:d,maximumFractionDigits:d});
+const n=v=>v==null?'–':v.toLocaleString('th-TH');
+const short=s=>s.replace(/^รพ\./,'');
+const YRS=['2566','2567','2568','2569'];
+
+function gauge(v,min,max,tg,color){
+  const fr=x=>Math.max(0,Math.min(1,(x-min)/(max-min)));
+  const ft=fr(tg),tx=100-90*Math.cos(Math.PI*ft),ty=100-90*Math.sin(Math.PI*ft),ux=100-76*Math.cos(Math.PI*ft),uy=100-76*Math.sin(Math.PI*ft),vx=100-104*Math.cos(Math.PI*ft),vy=100-104*Math.sin(Math.PI*ft);
+  return `<svg class="gauge" viewBox="0 0 200 118"><path d="M10 100A90 90 0 0 1 190 100" pathLength="100" fill="none" stroke="color-mix(in srgb,${color} 18%,transparent)" stroke-width="17" stroke-linecap="round"/>
+  <path d="M10 100A90 90 0 0 1 190 100" pathLength="100" fill="none" stroke="${color}" stroke-width="17" stroke-linecap="round" stroke-dasharray="${(fr(v)*100).toFixed(1)} 100"/>
+  <line x1="${ux}" y1="${uy}" x2="${vx}" y2="${vy}" stroke="currentColor" stroke-width="3" stroke-dasharray="4 3"/></svg>`;
+}
+function kpi(title,vals,cfg){
+  const cur=vals[3],ok=cfg.pass(cur);
+  const yrs=YRS.map((y,i)=>{const p=vals[i-1],cur=vals[i];const up=p!=null&&cur!=null?(cur>p?'▲':cur<p?'▼':'–'):'';
+    return `<div class="yr"><small>พ.ศ.${y}</small><b>${cur==null?'N/A':f(cur)}</b> <small style="display:inline">${up}</small></div>`}).join('');
+  return `<div class="card kpi" style="--c:${cfg.color}"><h2>${title}</h2><p class="sub">${cfg.target}</p>
+  ${gauge(cur,cfg.min,cfg.max,cfg.tv,cfg.color)}<div class="big num" style="color:${cfg.color}">${f(cur)}%</div>
+  <div class="tag"><span class="chip ${ok?'pass':'fail'}">${ok?'ผ่านเป้าหมาย':'ไม่ผ่านเป้าหมาย'}</span></div><div class="years">${yrs}</div></div>`;
+}
+function bars2(u){
+  const L=u.filter(x=>x[8]!=null).sort((a,b)=>b[8]-a[8]);
+  return L.map(x=>{const ok=x[8]>=60,w=Math.min(100,x[8]);
+    return `<div class="row"><span class="nm" title="${esc(x[1])}">${esc(short(x[1]))}</span><div class="trk"><div class="fill" style="left:0;width:${w}%;background:linear-gradient(90deg,${ok?'#12B76A,#7CE0A8':'#FFC53D,#FF8A3D'})"></div><i class="tgt" style="left:60%"></i></div><span class="v">${f(x[8],1)}</span></div>`}).join('')
+   +(u.some(x=>x[8]==null)?`<div class="legend">ไม่แสดง ${u.filter(x=>x[8]==null).length} หน่วยที่ไม่มีผู้ป่วยในระบบ (0/0)</div>`:'');
+}
+function bars1(u){
+  const MIN=-100,MAX=60,p=x=>(Math.max(MIN,Math.min(MAX,x))-MIN)/(MAX-MIN)*100,z=p(0);
+  const L=u.filter(x=>x[4]!=null).sort((a,b)=>b[4]-a[4]);
+  return L.map(x=>{const v=x[4],ok=v>5,a=p(v);
+    const st=v>=0?`left:${z}%;width:${a-z}%;background:linear-gradient(90deg,${ok?'#12B76A,#7CE0A8':'#FFC53D,#FF8A3D'})`:`left:${a}%;width:${z-a}%;background:linear-gradient(90deg,#FF5A5F,#FF9A8B)`;
+    return `<div class="row"><span class="nm" title="${esc(x[1])}">${esc(short(x[1]))}</span><div class="trk"><div class="fill" style="${st}"></div><i class="tgt" style="left:${p(5)}%"></i></div><span class="v ${v<0?'neg':''}">${f(v,1)}</span></div>`}).join('');
+}
+function stats(d){
+  const t=d.tot,p2=d.units.filter(u=>u[9]==='ผ่าน').length,p1=d.units.filter(u=>u[5]==='ผ่าน').length,N=d.units.length;
+  const S=(c,i,v,l)=>`<div class="card stat" style="--c:${c}"><div class="ico">${i}</div><div><div class="num">${v}</div><span>${l}</span></div></div>`;
+  return S('#FF5A5F','🩺',n(t[0]),'ผู้ป่วย CKD stage 5 รายใหม่ (ปีปัจจุบัน)')
+   +S('#6C4DFF','📋',n(t[1]),'ผู้ป่วย CKD stage 5 รายใหม่ (ปีก่อน)')
+   +S('#00B8A9','💊',`${n(t[4])} / ${n(t[5])}`,'ผู้ป่วย CKD stage 1–4 ที่ได้รับ ACEi/ARB')
+   +S('#FFC53D','🏥',`${p2} / ${N}`,`หน่วยบริการผ่านตัวชี้วัด 2 (ตัวชี้วัด 1 ผ่าน ${p1})`);
+}
+function table(d){
+  const st=s=>s?`<span class="chip ${s==='ผ่าน'?'pass':'fail'}">${esc(s)}</span>`:'';
+  const pc=v=>v==null?'–':`<span class="${v<0?'neg':''}">${f(v)}</span>`;
+  const r=u=>`<td>${u[0]}</td><td>${esc(u[1])}</td><td>${n(u[2])}</td><td>${n(u[3])}</td><td>${pc(u[4])}</td><td>${st(u[5])}</td><td>${n(u[6])}</td><td>${n(u[7])}</td><td>${pc(u[8])}</td><td>${st(u[9])}</td>`;
+  return `<tr><th>ที่</th><th>หน่วยบริการ</th><th>A (ปีนี้)</th><th>B (ปีก่อน)</th><th>% ลดลง</th><th>ผล</th><th>A (ได้ยา)</th><th>B (ทั้งหมด)</th><th>% ACEi/ARB</th><th>ผล</th></tr>`
+   +d.units.map(u=>`<tr>${r(u)}</tr>`).join('')+`<tr class="tot">${r(['','รวมทั้งสิ้น',...d.tot])}</tr>`;
+}
+function render(d){
+  const t=d.tot;
+  $('asof').textContent='ปีงบประมาณ 2569 · '+(d.asof||'');
+  $('kpis').innerHTML=
+    kpi('ตัวชี้วัด 1: ผู้ป่วย CKD stage 5 รายใหม่ลดลง',d.k1,{color:'#FF5A5F',target:'เป้าหมาย > ร้อยละ 5 จากปีงบประมาณก่อนหน้า',min:-50,max:25,tv:5,pass:v=>v!=null&&v>5})
+   +kpi('ตัวชี้วัด 2: ผู้ป่วย CKD ได้รับยา ACEi/ARB',d.k2,{color:'#00B8A9',target:'เป้าหมาย > ร้อยละ 60',min:0,max:100,tv:60,pass:v=>v!=null&&v>60});
+  $('stats').innerHTML=stats(d);$('b2').innerHTML=bars2(d.units);$('b1').innerHTML=bars1(d.units);$('tb').innerHTML=table(d);
+}
+
+/* ===== วงจรรีเฟรชอัตโนมัติ ===== */
+let left=CONFIG.REFRESH_SEC,busy=false;
+function setStatus(ok,msg){$('dot').className='dot'+(ok?'':' err');$('stxt').textContent=msg}
+async function load(){
+  if(busy) return; busy=true;
+  try{
+    const r=await fetch(csvUrl(),{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d=toData(await r.text()); render(d);
+    setStatus(true,'เชื่อมต่อสำเร็จ · อัปเดตล่าสุด '+new Date().toLocaleTimeString('th-TH'));
+  }catch(e){
+    if(!$('kpis').innerHTML) render(FALLBACK);
+    setStatus(false,'ดึง Sheet ไม่ได้ (แสดงข้อมูลล่าสุด/สำรอง) — ตรวจสิทธิ์แชร์ “ทุกคนที่มีลิงก์”');
+    console.warn(e);
+  }
+  busy=false; left=CONFIG.REFRESH_SEC;
+}
+setInterval(()=>{ if(--left<=0) load(); },1000);
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) load(); });
+load();
+</script>
+</body>
+</html>
